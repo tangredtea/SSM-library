@@ -1,5 +1,3 @@
-# SSM-Library — A Book Management System
-
 [![license](https://badgen.net/github/license/laowenruo/SSM-library?color=green)](https://github.com/laowenruo/SSM-library/blob/main/LICENSE)
 [![stars](https://badgen.net/github/stars/laowenruo/SSM-library)](https://github.com/laowenruo/SSM-library/stargazers)
 [![contributors](https://badgen.net/github/contributors/laowenruo/SSM-library)](https://github.com/laowenruo/SSM-library/graphs/contributors)
@@ -7,9 +5,21 @@
 [![issues](https://badgen.net/github/open-issues/laowenruo/SSM-library)](https://github.com/laowenruo/SSM-library/issues)
 [![PRs Welcome](https://badgen.net/badge/PRs/welcome/green)](http://makeapullrequest.com)
 
+[English](README.md) | [简体中文](README_CN.md)
+
+# 📚 SSM-Library
+
+> 🚀 A hands-on journey to master SSM framework integration!
+
 A beginner-friendly book management web application built with the **SSM framework** (Spring + SpringMVC + MyBatis). This project is designed as a hands-on exercise for developers who have just learned the basics of these frameworks and want to practice integrating them together. It also demonstrates the use of the **PageHelper** plugin for pagination.
 
-English | [简体中文](README_CN.md)
+## ✨ Why This Project?
+
+Perfect for developers who want to:
+- Practice integrating Spring, SpringMVC, and MyBatis from scratch
+- Understand how SSM components work together in a real application
+- Learn pagination implementation with PageHelper
+- See best practices for exception handling and XSS protection
 
 ## Features
 

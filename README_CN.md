@@ -1,5 +1,3 @@
-# SSM-Library — 图书管理系统
-
 [![license](https://badgen.net/github/license/laowenruo/SSM-library?color=green)](https://github.com/laowenruo/SSM-library/blob/main/LICENSE)
 [![stars](https://badgen.net/github/stars/laowenruo/SSM-library)](https://github.com/laowenruo/SSM-library/stargazers)
 [![contributors](https://badgen.net/github/contributors/laowenruo/SSM-library)](https://github.com/laowenruo/SSM-library/graphs/contributors)
@@ -7,9 +5,21 @@
 [![issues](https://badgen.net/github/open-issues/laowenruo/SSM-library)](https://github.com/laowenruo/SSM-library/issues)
 [![PRs Welcome](https://badgen.net/badge/PRs/welcome/green)](http://makeapullrequest.com)
 
+[English](README.md) | [简体中文](README_CN.md)
+
+# 📚 SSM-Library
+
+> 🚀 从零开始掌握 SSM 框架整合的实战之旅！
+
 一个基于 **SSM 框架**（Spring + SpringMVC + MyBatis）构建的图书管理 Web 应用，适合初学者练手。本项目专为刚学完这些框架基础知识、想要实践整合的开发者设计，同时演示了 **PageHelper** 插件实现分页功能。
 
-[English](README.md) | 简体中文
+## ✨ 为什么选择这个项目？
+
+非常适合想要：
+- 从零实践 Spring、SpringMVC 和 MyBatis 的整合
+- 理解 SSM 各组件如何在真实应用中协同工作
+- 学习使用 PageHelper 实现分页功能
+- 了解异常处理和 XSS 防护的最佳实践
 
 ## 功能特性
 
