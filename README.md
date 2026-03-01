@@ -9,6 +9,8 @@
 
 A beginner-friendly book management web application built with the **SSM framework** (Spring + SpringMVC + MyBatis). This project is designed as a hands-on exercise for developers who have just learned the basics of these frameworks and want to practice integrating them together. It also demonstrates the use of the **PageHelper** plugin for pagination.
 
+English | [简体中文](README_CN.md)
+
 ## Features
 
 - CRUD operations for books (Create, Read, Update, Delete)
