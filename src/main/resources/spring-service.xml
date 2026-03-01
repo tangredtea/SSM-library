@@ -12,32 +12,31 @@
        https://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx.xsd">
-    <!-- 扫描service相关的bean -->
-    <context:component-scan base-package="com.service" />
 
-    <!--BookServiceImpl注入到IOC容器中
-    将所有的业务类注入到Spring，可以通过配置，或注释实现-->
+    <!-- Scan service beans -->
+    <context:component-scan base-package="com.service"/>
+
+    <!-- Register BookServiceImpl -->
     <bean id="BookServiceImpl" class="com.service.BookServiceImpl">
         <property name="bookMapper" ref="bookMapper"/>
     </bean>
 
-    <!-- 配置事务管理器 -->
+    <!-- Transaction manager -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <!-- 注入数据源 -->
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource"/>
     </bean>
-    <!--aop事务支持-->
-    <!--结合AOP实现事务植入-->
-    <!--配置事务通知-->
+
+    <!-- Transaction advice -->
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
-        <!--给方法配置事务--><!--配置事务的传播特性 new propagation-->
         <tx:attributes>
             <tx:method name="*" propagation="REQUIRED"/>
         </tx:attributes>
     </tx:advice>
-    <!--配置事务切入-->
+
+    <!-- AOP transaction pointcut -->
     <aop:config>
         <aop:pointcut id="txPointCut" expression="execution(* com.dao.*.*(..))"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
     </aop:config>
+
 </beans>
