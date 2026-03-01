@@ -3,23 +3,26 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-    <!--查看SQL-->
+    <!-- SQL logging -->
     <settings>
         <setting name="logImpl" value="STDOUT_LOGGING"/>
     </settings>
-    <!--配置数据源，交给Spring去做-->
+
+    <!-- Type aliases -->
     <typeAliases>
         <package name="com.pojo"/>
     </typeAliases>
+
+    <!-- PageHelper plugin -->
     <plugins>
-        <!-- com.github.pagehelper为PageHelper类所在包名 -->
         <plugin interceptor="com.github.pagehelper.PageInterceptor">
-            <!-- 使用下面的方式配置参数，后面会有所有的参数介绍 -->
-            <property name="param1" value="value1"/>
+            <property name="helperDialect" value="mysql"/>
+            <property name="reasonable" value="true"/>
         </plugin>
     </plugins>
+
+    <!-- Mapper registration -->
     <mappers>
-        <!-- <mapper class="com.dao.BookMapper"/> 也一样-->
         <mapper resource="com/dao/BookMapper.xml"/>
     </mappers>
 </configuration>

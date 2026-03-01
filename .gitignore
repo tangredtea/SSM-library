@@ -1,2 +1,19 @@
 # Project exclude paths
 /target/
+
+# IDE
+.idea/
+.claude/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+*.class
+*.jar
+*.war
+
+# Logs
+*.log

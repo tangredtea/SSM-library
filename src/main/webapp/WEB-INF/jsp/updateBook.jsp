@@ -1,57 +1,41 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: DELL
-  Date: 2020/5/25
-  Time: 20:51
-  To change this template use File | Settings | File Templates.
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>修改书本信息</title>
+    <title>Edit Book - SSM Library</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 引入 Bootstrap -->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f5f7fa; padding-top: 50px; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 30px 40px; max-width: 600px; margin: 0 auto; }
+        .page-title { color: #333; border-bottom: 3px solid #667eea; padding-bottom: 10px; display: inline-block; margin-bottom: 25px; }
+        .btn-purple { background: #667eea; color: white; border: none; padding: 10px; }
+        .btn-purple:hover { background: #5a6fd6; color: white; }
+        .btn-back { margin-top: 15px; }
+    </style>
 </head>
 <body>
-<div class="container">
-
-    <div class="row clearfix">
-        <div class="col-md-12 column">
-            <div class="page-header">
-                <h1>
-                    <small>修改信息</small>
-                </h1>
-            </div>
-        </div>
-    </div>
-
-    <%--<form action="${pageContext.request.contextPath}/book/updateBook" method="post">
-        <input type="hidden" name="bookID" value="${book.getBookID()}"/>
-        书籍名称：<input type="text" name="bookName" value="${book.getBookName()}"/>
-        书籍数量：<input type="text" name="bookCounts" value="${book.getBookCounts()}"/>
-        书籍详情：<input type="text" name="detail" value="${book.getDetail() }"/>
-        <input type="submit" value="提交"/>
-    </form>--%>
+<div class="card">
+    <h2 class="page-title">Edit Book</h2>
     <form action="${pageContext.request.contextPath}/book/updateBook" method="post">
-        <%--前端传递隐藏域--%>
         <input type="hidden" name="bookID" value="${book.bookID}">
         <div class="form-group">
-            <label>书籍名称：</label>
-            <input type="text" name="bookName" class="form-control" value="${book.bookName}" required>
+            <label>Book Name</label>
+            <input type="text" name="bookName" class="form-control" value="<c:out value='${book.bookName}'/>" required>
         </div>
         <div class="form-group">
-            <label>书籍数量：</label>
-            <input type="text" name="bookCounts" class="form-control" value="${book.bookCounts}" required>
+            <label>Quantity</label>
+            <input type="number" name="bookCounts" class="form-control" value="${book.bookCounts}" min="0" required>
         </div>
         <div class="form-group">
-            <label>书籍描述：</label>
-            <input type="text" name="detail" class="form-control" value="${book.detail}" required>
+            <label>Description</label>
+            <input type="text" name="detail" class="form-control" value="<c:out value='${book.detail}'/>" required>
         </div>
         <div class="form-group">
-            <input type="submit" class="form-control" value="更改">
+            <input type="submit" class="form-control btn-purple" value="Save Changes">
         </div>
     </form>
-
+    <a class="btn btn-default btn-back" href="${pageContext.request.contextPath}/book/allBook">&larr; Back to List</a>
 </div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-# SSM小书城整合，新手框架整合练习
+# SSM-Library — A Book Management System
 
 [![license](https://badgen.net/github/license/laowenruo/SSM-library?color=green)](https://github.com/laowenruo/SSM-library/blob/main/LICENSE)
 [![stars](https://badgen.net/github/stars/laowenruo/SSM-library)](https://github.com/laowenruo/SSM-library/stargazers)
@@ -7,286 +7,147 @@
 [![issues](https://badgen.net/github/open-issues/laowenruo/SSM-library)](https://github.com/laowenruo/SSM-library/issues)
 [![PRs Welcome](https://badgen.net/badge/PRs/welcome/green)](http://makeapullrequest.com)
 
-本项目主要用于用于新手刚入门Spring，Mybatis,SpringMVC框架后，需要小练手整合一下，熟悉完框架之后，还是可以深入学习一下或者学下Springboot等内容(如果本项目对您有帮助，请 watch、star、fork 素质三连一波，鼓励一下作者，谢谢）
+A beginner-friendly book management web application built with the **SSM framework** (Spring + SpringMVC + MyBatis). This project is designed as a hands-on exercise for developers who have just learned the basics of these frameworks and want to practice integrating them together. It also demonstrates the use of the **PageHelper** plugin for pagination.
 
-## 数据库环境
+## Features
 
-- 创建一个存放书籍数据的数据库表
-- 文件为数据库.sql
+- CRUD operations for books (Create, Read, Update, Delete)
+- Fuzzy search by book name
+- Pagination with PageHelper
+- Global exception handling
+- XSS protection with JSTL `<c:out>` escaping
+- Bootstrap 3 responsive UI
 
-## 基本环境搭建
+## Tech Stack
 
-- 新建一Maven项目！ 添加web的支持
-- 导入相关的pom依赖！
-- 文件为pom.xml
-- 文件为Maven资源过滤设置,静态资源导出问题
+| Layer | Technology |
+|-------|-----------|
+| Presentation | JSP + Bootstrap 3 + JSTL |
+| Controller | Spring MVC 5.1.9 |
+| Service | Spring IoC + AOP Transactions |
+| Persistence | MyBatis 3.5.2 + PageHelper 5.0 |
+| Database | MySQL 5.7+ |
+| Connection Pool | C3P0 |
+| Build | Maven |
+| Logging | SLF4J + Log4j |
 
-<build>
-   <resources>
-       <resource>
-           <directory>src/main/java</directory>
-           <includes>
-               <include>**/*.properties</include>
-               <include>**/*.xml</include>
-           </includes>
-           <filtering>false</filtering>
-       </resource>
-       <resource>
-           <directory>src/main/resources</directory>
-           <includes>
-               <include>**/*.properties</include>
-               <include>**/*.xml</include>
-           </includes>
-           <filtering>false</filtering>
-       </resource>
-   </resources>
-</build>
+## Project Structure
 
-- 建立基本结构和配置框架！
+```
+SSM-library/
+├── pom.xml
+├── src/main/
+│   ├── java/com/
+│   │   ├── controller/          # Spring MVC controllers
+│   │   │   ├── BookController.java
+│   │   │   └── GlobalExceptionHandler.java
+│   │   ├── dao/                 # MyBatis mapper interfaces & XML
+│   │   │   ├── BookMapper.java
+│   │   │   └── BookMapper.xml
+│   │   ├── pojo/                # Entity classes
+│   │   │   └── Books.java
+│   │   ├── service/             # Service layer
+│   │   │   ├── BookService.java
+│   │   │   └── BookServiceImpl.java
+│   │   └── util/                # Utility classes
+│   │       └── DateUtils.java
+│   ├── resources/
+│   │   ├── applicationContext.xml
+│   │   ├── spring-dao.xml
+│   │   ├── spring-service.xml
+│   │   ├── spring-mvc.xml
+│   │   ├── mybatis-config.xml
+│   │   ├── database.properties
+│   │   └── log4j.properties
+│   └── webapp/
+│       ├── index.jsp
+│       └── WEB-INF/
+│           ├── web.xml
+│           └── jsp/
+│               ├── allBook.jsp
+│               ├── addBook.jsp
+│               ├── updateBook.jsp
+│               └── error.jsp
+└── schema.sql                    # Database schema & sample data
+```
 
-  ![](\项目结构.png)
+## Prerequisites
 
-## Mybatis层编写
+- JDK 1.8+
+- Maven 3.x
+- MySQL 5.7+
+- A servlet container (e.g. Tomcat 8+)
 
-- 数据库配置文件 database.properties
+## Getting Started
 
-  ```
-  jdbc.driver=com.mysql.jdbc.Driver
-  # &serverTimezone=Asia/Shanghai
-  jdbc.url=jdbc:mysql://localhost:3306/ssmbuild?useSSL=true&useUnicode=true&characterEncoding=utf8
-  jdbc.username=root
-  jdbc.password=123456
-  ```
+### 1. Set Up the Database
 
-- 编写MyBatis的核心配置文件  mybatis-config.xml
+Import the SQL file to create the database and sample data:
 
-  ```
-  <?xml version="1.0" encoding="UTF-8" ?>
-  <!DOCTYPE configuration
-         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-         "http://mybatis.org/dtd/mybatis-3-config.dtd">
-  <configuration>
-  
-     <typeAliases>
-         <package name="com.kuang.pojo"/>
-     </typeAliases>
-     <mappers>
-         <mapper resource="com/kuang/dao/BookMapper.xml"/>
-     </mappers>
-  
-  </configuration>
-  ```
+```sql
+mysql -u root -p < schema.sql
+```
 
-- 编写数据库对应的实体类 com.pojo.Books，可使用lombok插件！
+This will create the `ssmbuild` database with a `books` table containing sample records.
 
-- 编写Dao层的 Mapper接口！
+### 2. Configure Database Connection
 
-- 编写接口对应的 Mapper.xml 文件。需要导入MyBatis的包；
+Edit `src/main/resources/database.properties` with your MySQL credentials:
 
-- 编写Service层的接口和实现类
+```properties
+jdbc.driver=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/ssmbuild?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+jdbc.username=root
+jdbc.password=your_password
+```
 
-## Spring层
+### 3. Build and Deploy
 
-- 配置Spring整合MyBatis，我们这里数据源使用c3p0连接池；
+```bash
+mvn clean package
+```
 
-- 我们去编写Spring整合Mybatis的相关的配置文件；spring-dao.xml
+Deploy the generated `.war` file to your Tomcat server, or run it directly from your IDE.
 
-- ```
-  <?xml version="1.0" encoding="UTF-8"?>
-  <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:context="http://www.springframework.org/schema/context"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans
-         http://www.springframework.org/schema/beans/spring-beans.xsd
-         http://www.springframework.org/schema/context
-         https://www.springframework.org/schema/context/spring-context.xsd">
-  
-     <!-- 配置整合mybatis -->
-     <!-- 1.关联数据库文件 -->
-     <context:property-placeholder location="classpath:database.properties"/>
-  
-     <!-- 2.数据库连接池 -->
-     <!--数据库连接池
-         dbcp 半自动化操作 不能自动连接
-         c3p0 自动化操作（自动的加载配置文件 并且设置到对象里面）
-     -->
-     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-         <!-- 配置连接池属性 -->
-         <property name="driverClass" value="${jdbc.driver}"/>
-         <property name="jdbcUrl" value="${jdbc.url}"/>
-         <property name="user" value="${jdbc.username}"/>
-         <property name="password" value="${jdbc.password}"/>
-  
-         <!-- c3p0连接池的私有属性 -->
-         <property name="maxPoolSize" value="30"/>
-         <property name="minPoolSize" value="10"/>
-         <!-- 关闭连接后不自动commit -->
-         <property name="autoCommitOnClose" value="false"/>
-         <!-- 获取连接超时时间 -->
-         <property name="checkoutTimeout" value="10000"/>
-         <!-- 当获取连接失败重试次数 -->
-         <property name="acquireRetryAttempts" value="2"/>
-     </bean>
-  
-     <!-- 3.配置SqlSessionFactory对象 -->
-     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-         <!-- 注入数据库连接池 -->
-         <property name="dataSource" ref="dataSource"/>
-         <!-- 配置MyBaties全局配置文件:mybatis-config.xml -->
-         <property name="configLocation" value="classpath:mybatis-config.xml"/>
-     </bean>
-  
-     <!-- 4.配置扫描Dao接口包，动态实现Dao接口注入到spring容器中 -->
-     <!--解释 ：https://www.cnblogs.com/jpfss/p/7799806.html-->
-     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-         <!-- 注入sqlSessionFactory -->
-         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
-         <!-- 给出需要扫描Dao接口包 -->
-         <property name="basePackage" value="com.kuang.dao"/>
-     </bean>
-  
-  </beans>
-  ```
+### 4. Access the Application
 
-- Spring整合service层，Spring-service.xml文件编写
+Open your browser and navigate to:
 
-  ```
-  <?xml version="1.0" encoding="UTF-8"?>
-  <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:context="http://www.springframework.org/schema/context"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans
-     http://www.springframework.org/schema/beans/spring-beans.xsd
-     http://www.springframework.org/schema/context
-     http://www.springframework.org/schema/context/spring-context.xsd">
-  
-     <!-- 扫描service相关的bean -->
-     <context:component-scan base-package="com.service" />
-  
-     <!--BookServiceImpl注入到IOC容器中-->
-     <bean id="BookServiceImpl" class="com.service.BookServiceImpl">
-         <property name="bookMapper" ref="bookMapper"/>
-     </bean>
-  
-     <!-- 配置事务管理器 -->
-     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-         <!-- 注入数据库连接池 -->
-         <property name="dataSource" ref="dataSource" />
-     </bean>
-  
-  </beans>
-  ```
+```
+http://localhost:8080/mavenSSM/
+```
 
-## SpringMVC层
+## Configuration Details
 
-- web.xml编写
+### MyBatis Layer
 
-  ```
-  <?xml version="1.0" encoding="UTF-8"?>
-  <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
-          version="4.0">
-  
-     <!--DispatcherServlet-->
-     <servlet>
-         <servlet-name>DispatcherServlet</servlet-name>
-         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-         <init-param>
-             <param-name>contextConfigLocation</param-name>
-             <!--一定要注意:我们这里加载的是总的配置文件，之前被这里坑了！-->
-             <param-value>classpath:applicationContext.xml</param-value>
-         </init-param>
-         <load-on-startup>1</load-on-startup>
-     </servlet>
-     <servlet-mapping>
-         <servlet-name>DispatcherServlet</servlet-name>
-         <url-pattern>/</url-pattern>
-     </servlet-mapping>
-  
-     <!--encodingFilter-->
-     <filter>
-         <filter-name>encodingFilter</filter-name>
-         <filter-class>
-            org.springframework.web.filter.CharacterEncodingFilter
-         </filter-class>
-         <init-param>
-             <param-name>encoding</param-name>
-             <param-value>utf-8</param-value>
-         </init-param>
-     </filter>
-     <filter-mapping>
-         <filter-name>encodingFilter</filter-name>
-         <url-pattern>/*</url-pattern>
-     </filter-mapping>
-  
-     <!--Session过期时间-->
-     <session-config>
-         <session-timeout>15</session-timeout>
-     </session-config>
-  
-  </web-app>
-  ```
+- **Database config**: `database.properties` — JDBC connection parameters
+- **MyBatis config**: `mybatis-config.xml` — Type aliases, PageHelper plugin, mapper registration
+- **Mapper XML**: `BookMapper.xml` — SQL statements for all CRUD operations
 
-  
+### Spring Layer
 
-- spring-mvc.xml编写
+- **DAO config**: `spring-dao.xml` — DataSource (C3P0), SqlSessionFactory, MapperScanner
+- **Service config**: `spring-service.xml` — Component scanning, bean registration, transaction management with AOP
+- **MVC config**: `spring-mvc.xml` — Annotation-driven MVC, view resolver (JSP), controller scanning
+- **Root config**: `applicationContext.xml` — Imports all three Spring config files
 
-  ```
-  <?xml version="1.0" encoding="UTF-8"?>
-  <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:context="http://www.springframework.org/schema/context"
-        xmlns:mvc="http://www.springframework.org/schema/mvc"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans
-     http://www.springframework.org/schema/beans/spring-beans.xsd
-     http://www.springframework.org/schema/context
-     http://www.springframework.org/schema/context/spring-context.xsd
-     http://www.springframework.org/schema/mvc
-     https://www.springframework.org/schema/mvc/spring-mvc.xsd">
-  
-     <!-- 配置SpringMVC -->
-     <!-- 1.开启SpringMVC注解驱动 -->
-     <mvc:annotation-driven />
-     <!-- 2.静态资源默认servlet配置-->
-     <mvc:default-servlet-handler/>
-  
-     <!-- 3.配置jsp 显示ViewResolver视图解析器 -->
-     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-         <property name="prefix" value="/WEB-INF/jsp/" />
-         <property name="suffix" value=".jsp" />
-     </bean>
-  
-     <!-- 4.扫描web相关的bean -->
-     <context:component-scan base-package="com.kuang.controller" />
-  
-  </beans>
-  ```
+### Web Layer
 
-  
+- **web.xml** — DispatcherServlet, CharacterEncodingFilter (UTF-8), session timeout (15 min)
 
-### 最后的最后，大整合
+## API Endpoints
 
-- applicationContext.xml
+| Method | URL | Description |
+|--------|-----|-------------|
+| GET | `/book/allBook` | List all books (paginated) |
+| GET | `/book/toAddBook` | Show add book form |
+| POST | `/book/addBook` | Add a new book |
+| GET | `/book/toUpdateBook?id={id}` | Show edit book form |
+| POST | `/book/updateBook` | Update a book |
+| POST | `/book/del/{bookId}` | Delete a book |
+| POST | `/book/queryBook` | Search books by name (fuzzy match) |
 
-  ```
-  <?xml version="1.0" encoding="UTF-8"?>
-  <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans
-         http://www.springframework.org/schema/beans/spring-beans.xsd">
-  
-     <import resource="spring-dao.xml"/>
-     <import resource="spring-service.xml"/>
-     <import resource="spring-mvc.xml"/>
-  
-  </beans>
-  
-  ```
+## License
 
-  
-
-### 接下来就是自由的编写Controller以及视图层了，这里就不写了
-
-- 本项目主要是基于狂神说的SpringMVC整合书城项目编写，额外的就是试了下PageHelper的插件，实现了分页
+This project is open source and available under the [MIT License](LICENSE).
